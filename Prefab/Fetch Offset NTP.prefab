@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8631336059280230459
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1384973578361778122}
+  - component: {fileID: 227247525425558244}
+  - component: {fileID: 5560443628613680149}
+  - component: {fileID: 3767219159562443043}
+  m_Layer: 0
+  m_Name: Fetch Offset NTP
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1384973578361778122
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8631336059280230459}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.192916, y: 2.5953078, z: -0.05678896}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &227247525425558244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8631336059280230459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 838f4a9c4aecdf245932373324d0c9c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_webpageContainingNtpServerAddress: https://raw.githubusercontent.com/EloiStree/IP/main/IIDWS/DEFAULT_NTP.txt
+  m_onWebPageAsStringDownloaded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5560443628613680149}
+        m_TargetAssemblyTypeName: DateTimeNTPMono, be.eloistree.unityfetchoffsetntp
+        m_MethodName: SetGlobalNtpServer
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  m_loadOnStart: 1
+--- !u!114 &5560443628613680149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8631336059280230459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84098e2e6453dc84fba3e1a701954cec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_onUtcToNtpTickOffset:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3767219159562443043}
+        m_TargetAssemblyTypeName: NtpOffsetTickAverageMono, Assembly-CSharp
+        m_MethodName: PushNewOffset
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_ntpServer: pool.ntp.org
+  m_currentTimeOnPc: 
+  m_currentTimeOnNtp: 
+  m_currentTimeOnPcTick: 0
+  m_currentTimeOnNtpTick: 0
+  m_differencePcNtpTick: 0
+  m_differencePcNtpMilliseconds: 0
+  m_currentDateTimeUtcUseSummer: 0
+  m_currentDateTimeUtcNTPUseSummer: 0
+  m_autoRefresh: 1
+  m_refreshRateInSeconds: 1
+  m_refreshCount: 10
+--- !u!114 &3767219159562443043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8631336059280230459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bfa0611d7ba21a4ebdc166781356b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_offsetAverage:
+    m_lastOffsetTickReceived: 0
+    m_minimumOffsetTick: 0
+    m_maximumOffsetTick: 0
+    m_averageOffsetTick: 0
+    m_historySize: 10
+    m_historyOffsetTicks: 
+  m_onOffsetTickChanged:
+    m_PersistentCalls:
+      m_Calls: []

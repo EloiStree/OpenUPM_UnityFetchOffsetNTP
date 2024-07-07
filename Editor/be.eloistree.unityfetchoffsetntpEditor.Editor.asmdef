@@ -1,0 +1,16 @@
+
+{                                                                   
+            "name": "be.eloistree.unityfetchoffsetntpEditor",          
+    "references": ["be.eloistree.unityfetchoffsetntp"
+],                                                              
+    "optionalUnityReferences": [],                                  
+    "includePlatforms": [                                           
+        "Editor"                                                    
+    ],                                                              
+    "excludePlatforms": [],                                         
+    "allowUnsafeCode": false,                                       
+    "overrideReferences": false,                                    
+    "precompiledReferences": [],                                    
+    "autoReferenced": true,                                         
+    "defineConstraints": []                                         
+}                                                                   
