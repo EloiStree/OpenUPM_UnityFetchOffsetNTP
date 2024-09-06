@@ -1,7 +1,7 @@
 
 {                                                                   
-            "name": "be.eloistree.unityfetchoffsetntpEditor",          
-    "references": ["be.eloistree.unityfetchoffsetntp"
+            "name": "be.elab.unityfetchoffsetntpEditor",          
+    "references": ["be.elab.unityfetchoffsetntp"
 ],                                                              
     "optionalUnityReferences": [],                                  
     "includePlatforms": [                                           
