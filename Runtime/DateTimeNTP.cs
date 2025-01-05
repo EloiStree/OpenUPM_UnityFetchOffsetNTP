@@ -13,6 +13,7 @@ public class DateTimeNTP
     public static void SetGlobalNtpServer(string ntpServer)
     {
         m_globalServerNtpUrl = ntpServer;
+        Debug.Log("NTP Server set to: " + m_globalServerNtpUrl);
     }
     public static DateTime GetNetworkTime()
     {
@@ -24,6 +25,7 @@ public class DateTimeNTP
         ntpData[0] = 0x1B; //LeapIndicator = 0 (no warning), VersionNum = 3 (IPv4 only), Mode = 3 (Client Mode)
 
         var addresses = Dns.GetHostEntry(ntpServerUrl).AddressList;
+        Debug.Log("NTP Server IP: " + addresses[0].ToString());
         var ipEndPoint = new IPEndPoint(addresses[0], 123);
         var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
