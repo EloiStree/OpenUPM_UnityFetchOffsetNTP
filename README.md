@@ -5,7 +5,7 @@ Just a tool to fetch the offset from a NTP server in Unity3D
 
 
 If you need to check with Python:
-```
+``` py
 
 import ntplib
 from time import ctime, time, sleep
