@@ -108,13 +108,21 @@ private IEnumerator Start()
     [ContextMenu("Refresh")]
     public void Refresh() {
 
-        try {
-        // check if ntpServer is ip format
         bool isIp = IPAddress.TryParse(m_ntpServer, out _);
 
         if (!isIp)
             m_ntpServer = GetIpOfGivenServerName(m_ntpServer);
-        m_currentTimeOnNtpDate = DateTimeNTP.GetNetworkTime(m_ntpServer);
+       
+
+
+        m_currentTimeOnPcDate = DateTime.UtcNow; 
+        //TimeZoneInfo timeZone = TimeZoneInfo.Local;
+        //m_currentDateTimeUtcUseSummer = timeZone.IsDaylightSavingTime(m_currentTimeOnPcDate);
+        //m_currentDateTimeUtcNTPUseSummer = timeZone.IsDaylightSavingTime(m_currentTimeOnNtpDate);
+        try
+        {
+
+            m_currentTimeOnNtpDate = DateTimeNTP.GetNetworkTime(m_ntpServer);
         }
         catch (Exception e)
         {
@@ -122,10 +130,7 @@ private IEnumerator Start()
             Debug.LogError("Failed to reach NTP server: " + m_ntpServer);
             return;
         }
-        m_currentTimeOnPcDate = DateTime.UtcNow; 
-        TimeZoneInfo timeZone = TimeZoneInfo.Local;
-        m_currentDateTimeUtcUseSummer = timeZone.IsDaylightSavingTime(m_currentTimeOnPcDate);
-        m_currentDateTimeUtcNTPUseSummer = timeZone.IsDaylightSavingTime(m_currentTimeOnNtpDate);
+
         m_currentTimeOnPc = m_currentTimeOnPcDate.ToString();
         m_currentTimeOnNtp = m_currentTimeOnNtpDate.ToString();
         m_currentTimeOnPcTick =m_currentTimeOnPcDate.Ticks ;
