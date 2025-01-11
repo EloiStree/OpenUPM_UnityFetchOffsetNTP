@@ -1,23 +1,25 @@
-﻿public class DatetimeUtilityNTP {
+﻿using System;
+
+public class DatetimeUtilityNTP {
 
 
-    public static void GetTimeNowUtcLocal(out long tickTime)
+    public static void GetTimeNowTicksUtcLocal(out long tickTime)
     {
         tickTime = System.DateTime.UtcNow.Ticks;
     }
 
-    public static void GetTimeNowUtcTicks(long offset, out long tickTime)
+    public static void GetTimeNowTicksUtc(long offsetMilliseconds, out long tickTime)
     {
-        GetTimeNowUtcLocal(out tickTime);
-        tickTime += offset;
+        GetTimeNowTicksUtcLocal(out tickTime);
+        tickTime += (offsetMilliseconds * System.TimeSpan.TicksPerMillisecond);
     }
-    public static void GetTimeNowUtcSeconds(long offset, out int seconds) { 
-        GetTimeNowUtcTicks(offset, out long tickTime);
+    public static void GetTimeNowTicksUtcSeconds(long offsetMilliseconds, out int seconds) { 
+        GetTimeNowTicksUtc(offsetMilliseconds, out long tickTime);
         seconds = (int)(tickTime / System.TimeSpan.TicksPerSecond);
     }
-    public static void GetTimeNowUtcSeconds(long offset, out double seconds)
+    public static void GetTimeNowTicksUtcSeconds(long offsetMilliseconds, out double seconds)
     {
-        GetTimeNowUtcTicks(offset, out long tickTime);
+        GetTimeNowTicksUtc(offsetMilliseconds, out long tickTime);
         seconds = ((double)tickTime / (double)System.TimeSpan.TicksPerSecond);
     }
 

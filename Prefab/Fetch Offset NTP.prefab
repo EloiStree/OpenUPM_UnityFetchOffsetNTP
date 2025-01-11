@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8631336059280230459
+--- !u!1 &8528785152641654445
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,10 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1384973578361778122}
-  - component: {fileID: 227247525425558244}
-  - component: {fileID: 5560443628613680149}
-  - component: {fileID: 3767219159562443043}
+  - component: {fileID: 7931415843138089819}
+  - component: {fileID: 5584203738097691485}
+  - component: {fileID: 4065574152859943451}
   m_Layer: 0
   m_Name: Fetch Offset NTP
   m_TagString: Untagged
@@ -19,13 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1384973578361778122
+--- !u!4 &7931415843138089819
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8631336059280230459}
+  m_GameObject: {fileID: 8528785152641654445}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.192916, y: 2.5953078, z: -0.05678896}
@@ -34,52 +33,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &227247525425558244
+--- !u!114 &5584203738097691485
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8631336059280230459}
+  m_GameObject: {fileID: 8528785152641654445}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 838f4a9c4aecdf245932373324d0c9c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 4810088abd9c7a8449d0d4884db926dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_webpageContainingNtpServerAddress: https://raw.githubusercontent.com/EloiStree/IP/main/IIDWS/DEFAULT_NTP.txt
-  m_onWebPageAsStringDownloaded:
+  m_ntpServer: raspberrypi5.local
+  m_ntpOffsetLocalToServerInMilliseconds: 0
+  m_onNtpOffsetRefreshInMilliseconds:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5560443628613680149}
-        m_TargetAssemblyTypeName: DateTimeNTPMono, be.eloistree.unityfetchoffsetntp
-        m_MethodName: SetGlobalNtpServer
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  m_loadOnStart: 1
---- !u!114 &5560443628613680149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8631336059280230459}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84098e2e6453dc84fba3e1a701954cec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_onUtcToNtpTickOffset:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3767219159562443043}
-        m_TargetAssemblyTypeName: NtpOffsetTickAverageMono, Assembly-CSharp
+      - m_Target: {fileID: 4065574152859943451}
+        m_TargetAssemblyTypeName: NtpOffsetTickAverageMono, be.elab.unityfetchoffsetntp
         m_MethodName: PushNewOffset
         m_Mode: 0
         m_Arguments:
@@ -90,25 +62,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_ntpServer: pool.ntp.org
-  m_currentTimeOnPc: 
-  m_currentTimeOnNtp: 
-  m_currentTimeOnPcTick: 0
-  m_currentTimeOnNtpTick: 0
-  m_differencePcNtpTick: 0
-  m_differencePcNtpMilliseconds: 0
-  m_currentDateTimeUtcUseSummer: 0
-  m_currentDateTimeUtcNTPUseSummer: 0
-  m_autoRefresh: 1
-  m_refreshRateInSeconds: 1
-  m_refreshCount: 10
---- !u!114 &3767219159562443043
+  m_manualAdjustement: 0
+  m_onNtpOffsetRefreshMillisecondsAdjusted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_classicDateFromat: yyyy-MM-dd HH:mm:ss.fff
+  m_ntpDate: '-'
+  m_ntpTimeInSecond: 0
+  m_ntpTimeInMillisecond: 0
+  m_ntpTimeInMicrosecond: 0
+  m_ntpTimeInTicks: 0
+  m_onNtpTimeDateFormat:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4065574152859943451
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8631336059280230459}
+  m_GameObject: {fileID: 8528785152641654445}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bfa0611d7ba21a4ebdc166781356b18, type: 3}
@@ -123,4 +96,16 @@ MonoBehaviour:
     m_historyOffsetTicks: 
   m_onOffsetTickChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Eloi.IID.IIDMono_SendBytesIID, be.elab.iid
+        m_MethodName: SetNtpOffsetInMilliseconds
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

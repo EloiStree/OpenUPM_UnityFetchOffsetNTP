@@ -9,6 +9,10 @@ public class NtpOffsetTickAverageMono : MonoBehaviour
     public NtpOffsetTickAverage m_offsetAverage;
     public UnityEvent<long> m_onOffsetTickChanged;
 
+    public void PushNewOffset(int tickOffset)
+    {
+        PushNewOffset((long)tickOffset);
+    }
     public void PushNewOffset(long tickOffset)
     {
         m_offsetAverage.PushNewOffset(tickOffset);
