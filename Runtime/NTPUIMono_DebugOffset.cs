@@ -26,6 +26,10 @@ public class NTPUIMono_DebugOffset : MonoBehaviour
     {
         m_ntpOffsetLocalToServerMilliseconds = offset;
     }
+    public void SetOffsetMilliseconds(long offset)
+    {
+        m_ntpOffsetLocalToServerMilliseconds =(int) offset;
+    }
 
     void Update()
     {

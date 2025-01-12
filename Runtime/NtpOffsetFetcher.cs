@@ -1,7 +1,10 @@
 
 
 using System;
+using System.Net.Sockets;
+using System.Net;
 using System.Security.Policy;
+using System.Diagnostics;
 
 namespace Eloi.IID
 {
@@ -67,20 +70,27 @@ namespace Eloi.IID
 
         public static void GetTimesFromOffsetMilliseconds(
             int ntpOffsetLocalToServerMilliseconds,
-            out long localTimeNoneUTCInMilliseconds, 
+            out long localTimeInMillisecondsNoneUTC, 
             out long localTimeInMillisecondsUTC,
             out long ntpTimeInMillisecondsUTC)
         {
-            long ticks = DateTime.UtcNow.Ticks;
-            long ticksLocal = DateTime.Now.Ticks;
-            localTimeNoneUTCInMilliseconds = ticksLocal / 10000;
-            localTimeInMillisecondsUTC = ticks / 10000;
-            ntpTimeInMillisecondsUTC = (ticks + ntpOffsetLocalToServerMilliseconds * 10000) / 10000;
+            NtpOffsetFetcher.GetCurrentTimeAsMillisecondsLocalNoneUtc(out  localTimeInMillisecondsNoneUTC);
+            NtpOffsetFetcher.GetCurrentTimeAsMillisecondsLocalUtc(out localTimeInMillisecondsUTC);
+            NtpOffsetFetcher.GetCurrentTimeAsMillisecondsUtcNtp(
+                localTimeInMillisecondsUTC,
+                ntpOffsetLocalToServerMilliseconds,
+                out ntpTimeInMillisecondsUTC);
 
         }
+
+        public static DateTime GetDateTimeFromTimestampMillisecondsUTC(long timestampMilliseconds)
+        {
+            return DateTimeOffset.FromUnixTimeMilliseconds(timestampMilliseconds).DateTime;
+        }
+
         public static void GetTimesFromOffsetMilliseconds(
            int ntpOffsetLocalToServerMilliseconds,
-            out long localTimeNoneUTCInMilliseconds,
+            out long localTimeInMillisecondsNoneUTC,
             out long localTimeInMillisecondsUTC,
             out long ntpTimeInMillisecondsUTC,
             out string localTimeNoneUTCInMillisecondsStr,
@@ -91,14 +101,69 @@ namespace Eloi.IID
 
             GetTimesFromOffsetMilliseconds(
                 ntpOffsetLocalToServerMilliseconds,
-                out localTimeNoneUTCInMilliseconds,
+                out localTimeInMillisecondsNoneUTC,
                 out localTimeInMillisecondsUTC,
                 out ntpTimeInMillisecondsUTC
                 );
-            localTimeNoneUTCInMillisecondsStr = new DateTime(localTimeNoneUTCInMilliseconds * 10000).ToString(dateFormat);
-            localTimeInMillisecondsUTCStr = new DateTime(localTimeInMillisecondsUTC * 10000).ToString(dateFormat);
-            ntpTimeInMillisecondsUTCStr = new DateTime(ntpTimeInMillisecondsUTC * 10000).ToString(dateFormat);
+            localTimeNoneUTCInMillisecondsStr =
+                GetDateTimeFromTimestampMillisecondsUTC(localTimeInMillisecondsNoneUTC).ToString(dateFormat);
+            localTimeInMillisecondsUTCStr = 
+                GetDateTimeFromTimestampMillisecondsUTC(localTimeInMillisecondsUTC).ToString(dateFormat);
+            ntpTimeInMillisecondsUTCStr = 
+                GetDateTimeFromTimestampMillisecondsUTC(ntpTimeInMillisecondsUTC).ToString(dateFormat);
 
+
+        }
+
+        public static string GetIpv4FromHostname(string hostname)
+        {
+            try
+            {
+                // Get the IP addresses associated with the hostname
+                IPAddress[] addresses = Dns.GetHostAddresses(hostname);
+
+                foreach (IPAddress address in addresses)
+                {
+                    // Check if the address is IPv4
+                    if (address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return address.ToString();
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                UnityEngine.Debug.LogError("Error resolving IP address: " + ex.Message);
+            }
+
+            return null; 
+        }
+
+
+        private static void GetCurrentTimeAsMillisecondsLocalNoneUtc(out long localTimeNoneUTCInMilliseconds)
+        {
+            long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            localTimeNoneUTCInMilliseconds = milliseconds;
+        }
+
+        public static void GetCurrentTimeAsMillisecondsLocalUtc(out long timeInMilliseconds)
+        {
+            long milliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            timeInMilliseconds = milliseconds;
+        }
+
+        public static void GetCurrentTimeAsMillisecondsNtp(long offsetMilliseconds, out long timeInMilliseconds)
+        {
+            GetCurrentTimeAsMillisecondsLocalUtc(out long localMilliseconds);
+            GetCurrentTimeAsMillisecondsUtcNtp(localMilliseconds, offsetMilliseconds, out timeInMilliseconds);
+
+        }
+
+        public static void GetCurrentTimeAsMillisecondsUtcNtp(long timestampMilliseconds, long offsetMilliseconds, out long timeInMilliseconds)
+        {
+            long milliseconds = timestampMilliseconds;
+            milliseconds += offsetMilliseconds ;
+            timeInMilliseconds = milliseconds;
 
         }
     } 

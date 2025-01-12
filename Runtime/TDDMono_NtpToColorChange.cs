@@ -33,7 +33,7 @@ public class TDDMono_NtpToColorChange : MonoBehaviour
     public void Update()
     {
 
-        DatetimeUtilityNTP.GetTimeNowTicksUtcSeconds(m_ntpOffsetMillisecondsFromLocalToNtp, out m_currentSecondsInDoube);
+        DatetimeUtilityNTP.GetTimeNowSecondsUtc(m_ntpOffsetMillisecondsFromLocalToNtp, out m_currentSecondsInDoube);
         
         m_currentSecondsNtp = (ulong)m_currentSecondsInDoube;
 

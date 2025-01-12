@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class TDDMono_NtpCyclePercent : MonoBehaviour
 {
 
-    public long m_ntpOffsetLocalToNtp;
+    public long m_ntpOffsetMilliseconds;
 
     public float m_cycleSeconds = 10;
 
@@ -23,13 +23,13 @@ public class TDDMono_NtpCyclePercent : MonoBehaviour
 
     public void SetOffsetLocalToServerTicks(long offset)
     {
-        m_ntpOffsetLocalToNtp = offset;
+        m_ntpOffsetMilliseconds = offset;
     }
 
 
     public void Update()
     {
-        DatetimeUtilityNTP.GetTimeNowUtcTicks(m_ntpOffsetLocalToNtp, out  m_tickTimeNtp);
+        DatetimeUtilityNTP.GetTimeNowTicksUtc(m_ntpOffsetMilliseconds, out  m_tickTimeNtp);
         m_cycleTicks = (long)(m_cycleSeconds * TimeSpan.TicksPerSecond);
         m_moduloOfTicksCycle = m_tickTimeNtp % m_cycleTicks;
         m_percentOfCycle = (double)m_moduloOfTicksCycle / (double)m_cycleTicks;
