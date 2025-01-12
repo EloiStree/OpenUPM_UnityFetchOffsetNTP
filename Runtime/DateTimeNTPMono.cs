@@ -54,31 +54,7 @@ public class DateTimeNTPMono: MonoBehaviour
     {
         m_ntpServer = "raspberrypi5.local";
     }
-    public string GetIpOfGivenServerName(string ntpServerName)
-    {
-        try
-        {
-            // Get the host entry for the NTP server name
-            var hostEntry = Dns.GetHostEntry(ntpServerName);
-
-            // Loop through the addresses and find the first IPv4 address
-            foreach (var address in hostEntry.AddressList)
-            {
-                if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                {
-                    return address.ToString(); // Return the IPv4 address
-                }
-            }
-
-            return null;
-        }
-        catch (Exception ex)
-        {
-            // Handle errors (e.g., DNS resolution issues)
-            Console.WriteLine($"Error: {ex.Message}");
-            return null;
-        }
-    }
+  
 
 
 private IEnumerator Start()
@@ -105,6 +81,33 @@ private IEnumerator Start()
         SetGlobalNtpServer(m_ntpServer);
     }
 
+
+
+    public string GetIpOfGivenServerName(string ntpServerName)
+    {
+        try
+        {
+            // Get the host entry for the NTP server name
+            var hostEntry = Dns.GetHostEntry(ntpServerName);
+
+            // Loop through the addresses and find the first IPv4 address
+            foreach (var address in hostEntry.AddressList)
+            {
+                if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    return address.ToString(); // Return the IPv4 address
+                }
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // Handle errors (e.g., DNS resolution issues)
+            Console.WriteLine($"Error: {ex.Message}");
+            return null;
+        }
+    }
     [ContextMenu("Refresh")]
     public void Refresh() {
 
