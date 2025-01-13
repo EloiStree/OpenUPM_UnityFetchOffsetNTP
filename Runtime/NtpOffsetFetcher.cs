@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Security.Policy;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Eloi.IID
 {
@@ -20,6 +21,10 @@ namespace Eloi.IID
                 var ntpData = new byte[48];
                 ntpData[0] = 0x1B;
                 var addresses = System.Net.Dns.GetHostEntry(ntpServer).AddressList;
+
+                UnityEngine.Debug.Log($"NTP Fetch: {ntpServer} {string.Join(",", addresses.Select(a => a.ToString()))}");
+
+
                 var ipEndPoint = new System.Net.IPEndPoint(addresses[0], 123);
                 using (var socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp))
                 {

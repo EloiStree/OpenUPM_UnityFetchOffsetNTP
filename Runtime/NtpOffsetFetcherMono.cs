@@ -41,9 +41,8 @@ public class NtpOffsetFetcherMono : MonoBehaviour
 
     public void Awake()
     {
-        //string ipv4 = NtpOffsetFetcher.GetIpv4FromHostname(m_ntpServer);
-        //m_ntpServer = ipv4;
-        //m_onIvp4Refresh.Invoke(m_ntpServer);
+        string ipv4 = NtpOffsetFetcher.GetIpv4FromHostname(m_ntpServer);
+        m_onIvp4Refresh.Invoke($"{m_ntpServer}({ipv4})");
         Refresh();
     }
     public void Start()
