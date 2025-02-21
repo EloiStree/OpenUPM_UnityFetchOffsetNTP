@@ -22,6 +22,7 @@ public class NtpOffsetFetcherMono : MonoBehaviour
     public UnityEvent<string> m_onNtpTimeDateFormat;
     public UnityEvent<string> m_onIvp4Refresh;
 
+
     public void SetNtpServerNameTo(string nameNtpServer) {
         m_ntpServer = nameNtpServer; 
     }
@@ -57,7 +58,13 @@ public class NtpOffsetFetcherMono : MonoBehaviour
     [ContextMenu("Refresh")]
     public void Refresh()
     {
-        m_ntpOffsetLocalToServerInMilliseconds = NtpOffsetFetcher.FetchNtpOffsetInMilliseconds(m_ntpServer);
+        m_ntpOffsetLocalToServerInMilliseconds = 
+            NtpOffsetFetcher.
+            FetchNtpOffsetInMilliseconds(m_ntpServer
+            , out bool hadError);
+        if (hadError) {
+            m_ntpOffsetLocalToServerInMilliseconds = 0;
+        }
         m_onNtpOffsetRefreshInMilliseconds.Invoke(m_ntpOffsetLocalToServerInMilliseconds);
         m_onNtpOffsetRefreshMillisecondsAdjusted.Invoke(m_ntpOffsetLocalToServerInMilliseconds + m_manualAdjustement);
     }

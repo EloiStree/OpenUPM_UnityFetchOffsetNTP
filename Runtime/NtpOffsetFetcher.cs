@@ -3,8 +3,8 @@
 using System;
 using System.Net.Sockets;
 using System.Net;
-using System.Diagnostics;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Eloi.IID
 {
@@ -13,8 +13,9 @@ namespace Eloi.IID
     {
         private static int defaultGlobalNtpOffsetInMilliseconds = 0;
 
-        public static int FetchNtpOffsetInMilliseconds(string ntpServer)
+        public static int FetchNtpOffsetInMilliseconds(string ntpServer, out bool hadError)
         {
+            hadError = false;
             try
             {
                 var ntpData = new byte[48];
@@ -43,7 +44,8 @@ namespace Eloi.IID
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error NTP Fetch: {ntpServer} {e}");
+                UnityEngine.Debug.Log ($"Error NTP Fetch: {ntpServer} {e}");
+                hadError = true;
                 return 0;
             }
         }
@@ -52,7 +54,11 @@ namespace Eloi.IID
         {
             try
             {
-                var offset = FetchNtpOffsetInMilliseconds(ntpServer);
+                var offset = FetchNtpOffsetInMilliseconds(ntpServer, out bool hadError);
+                if( hadError) {
+                    defaultGlobalNtpOffsetInMilliseconds = 0;
+                    return;
+                }
                 defaultGlobalNtpOffsetInMilliseconds = offset;
                 Console.WriteLine($"Default Global NTP Offset: {defaultGlobalNtpOffsetInMilliseconds} {ntpServer}");
             }
@@ -115,8 +121,6 @@ namespace Eloi.IID
                 GetDateTimeFromTimestampMillisecondsUTC(localTimeInMillisecondsUTC).ToString(dateFormat);
             ntpTimeInMillisecondsUTCStr = 
                 GetDateTimeFromTimestampMillisecondsUTC(ntpTimeInMillisecondsUTC).ToString(dateFormat);
-
-
         }
 
         public static string GetIpv4FromHostname(string hostname)
@@ -137,7 +141,8 @@ namespace Eloi.IID
             }
             catch (System.Exception ex)
             {
-                UnityEngine.Debug.LogError("Error resolving IP address: " + ex.Message);
+                
+                UnityEngine.Debug.LogWarning("Error resolving IP address: " + ex.Message + "\n"+ex.StackTrace);
             }
 
             return null; 
