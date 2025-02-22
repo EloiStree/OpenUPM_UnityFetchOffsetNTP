@@ -20,6 +20,9 @@ public class NtpOffsetOnlyOnceMono : MonoBehaviour {
     public UnityEvent<long> m_onMillisecondsChanged;
     public UnityEvent<long> m_onSecondsChanged;
 
+    public UnityEvent<string> m_onServerName;
+    public UnityEvent<string> m_onServerIpv4;
+
     private void Awake()
     {
         if (m_loadAtAwake) {
@@ -54,7 +57,10 @@ public class NtpOffsetOnlyOnceMono : MonoBehaviour {
         { 
             m_previousSeconds = m_timeInSeconds;
             m_onSecondsChanged.Invoke(m_timeInSeconds);
+            m_onServerName.Invoke(StaticNtpOffsetFetcher.m_serverNameUsed);
+            m_onServerIpv4.Invoke(StaticNtpOffsetFetcher.m_serverIpv4Used);
         }
+
     }
 
     [ContextMenu("Force Ntp Offset Update")]
