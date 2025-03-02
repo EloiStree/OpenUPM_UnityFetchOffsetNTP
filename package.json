@@ -2,7 +2,7 @@
 {                                                                                
   "name": "be.elab.unityfetchoffsetntp",                              
   "displayName": "Unity Fetch Offset NTP",                        
-  "version": "0.0.1",                         
+  "version": "2025.1.16",                         
   "unity": "2018.1",                             
   "unityRelease": "",                             
   "description": "Fetch the offset of a NTP server.",                         
