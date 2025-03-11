@@ -11,7 +11,8 @@ namespace Eloi.IID
 
     public static class NtpOffsetFetcher
     {
-        private static int defaultGlobalNtpOffsetInMilliseconds = 0;
+        private static int sm_defaultGlobalNtpOffsetInMilliseconds = 0;
+        private static int sm_connectServerTimeout = 4000;
 
         public static int FetchNtpOffsetInMilliseconds(string ntpServer, out bool hadError)
         {
@@ -30,7 +31,17 @@ namespace Eloi.IID
                 {
                     socket.Connect(ipEndPoint);
                     socket.Send(ntpData);
-                    socket.Receive(ntpData);
+                    socket.ReceiveTimeout = sm_connectServerTimeout; // Set timeout to 5 seconds
+                    try
+                    {
+                        socket.Receive(ntpData);
+                    }
+                    catch (SocketException ex)
+                    {
+                        UnityEngine.Debug.Log($"Socket timeout: {ex.Message}");
+                        hadError = true;
+                        return 0;
+                    }
                 }
 
                 ulong intPart = BitConverter.ToUInt32(ntpData, 40);
@@ -56,21 +67,21 @@ namespace Eloi.IID
             {
                 var offset = FetchNtpOffsetInMilliseconds(ntpServer, out bool hadError);
                 if( hadError) {
-                    defaultGlobalNtpOffsetInMilliseconds = 0;
+                    sm_defaultGlobalNtpOffsetInMilliseconds = 0;
                     return;
                 }
-                defaultGlobalNtpOffsetInMilliseconds = offset;
-                Console.WriteLine($"Default Global NTP Offset: {defaultGlobalNtpOffsetInMilliseconds} {ntpServer}");
+                sm_defaultGlobalNtpOffsetInMilliseconds = offset;
+                Console.WriteLine($"Default Global NTP Offset: {sm_defaultGlobalNtpOffsetInMilliseconds} {ntpServer}");
             }
             catch (Exception)
             {
-                defaultGlobalNtpOffsetInMilliseconds = 0;
+                sm_defaultGlobalNtpOffsetInMilliseconds = 0;
             }
         }
 
         public static int GetGlobalNtpOffsetInMilliseconds()
         {
-            return defaultGlobalNtpOffsetInMilliseconds;
+            return sm_defaultGlobalNtpOffsetInMilliseconds;
         }
 
         private static uint SwapEndianness(ulong x)
