@@ -45,8 +45,8 @@ public class StaticNtpOffsetFetcher {
 
         foreach (var ntpServer in ntpServers)
         {
-            if (loadOnlyIfNotLoadYet && m_wasLoadedOnceFromServer) { 
-                Debug.Log("Already laoded once from server");
+            if (loadOnlyIfNotLoadYet && m_wasLoadedOnceFromServer) {
+                // Debug.Log("Already loaded once from server");
                 return true;
             }
             bool ok =UpdateOffsetFromServer(ntpServer, loadOnlyIfNotLoadYet);
@@ -68,12 +68,12 @@ public class StaticNtpOffsetFetcher {
         {
 
             string ipv4 = NtpOffsetFetcher.GetIpv4FromHostname(ntpServer);
-            Debug.Log($"Try to fetch {ntpServer} --> {ipv4} ");
+           // Debug.Log($"Try to fetch {ntpServer} --> {ipv4} ");
             int offset = NtpOffsetFetcher.FetchNtpOffsetInMilliseconds(ipv4, out bool hadError);
             if (hadError)
                 return false;
 
-            Debug.Log($"Fetch {ntpServer} --> {ipv4} =  {offset}");
+            // Debug.Log($"Fetch {ntpServer} --> {ipv4} =  {offset}");
 
             UpdateOffsetFromCustomCode(offset);
             m_wasLoadedOnceFromServer = true;
