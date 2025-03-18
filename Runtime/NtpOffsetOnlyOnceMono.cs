@@ -63,6 +63,7 @@ public class NtpOffsetOnlyOnceMono : MonoBehaviour {
 
     }
 
+
     public void SetNtpServerUrlAndForceUpdate(string server)
     {
         m_serversNtp = new string[] { server };
