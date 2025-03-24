@@ -12,7 +12,7 @@ namespace Eloi.IID
     public static class NtpOffsetFetcher
     {
         private static int sm_defaultGlobalNtpOffsetInMilliseconds = 0;
-        private static int sm_connectServerTimeout = 4000;
+        private static int sm_connectServerTimeoutMilliseconds = 800;
 
         public static int FetchNtpOffsetInMilliseconds(string ntpServer, out bool hadError)
         {
@@ -31,7 +31,7 @@ namespace Eloi.IID
                 {
                     socket.Connect(ipEndPoint);
                     socket.Send(ntpData);
-                    socket.ReceiveTimeout = sm_connectServerTimeout; // Set timeout to 5 seconds
+                    socket.ReceiveTimeout = sm_connectServerTimeoutMilliseconds; // Set timeout to 5 seconds
                     try
                     {
                         socket.Receive(ntpData);
