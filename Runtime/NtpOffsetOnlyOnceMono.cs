@@ -13,7 +13,7 @@ public class NtpOffsetOnlyOnceMono : MonoBehaviour {
 
     public long m_timeInMilliseconds;
     public long m_timeInSeconds;
-
+    public string m_ipv4;
     public bool m_loadedOk;
     private long m_previousNtpOffset;
     public UnityEvent<long> m_onNtpOffsetChanged;
@@ -57,6 +57,7 @@ public class NtpOffsetOnlyOnceMono : MonoBehaviour {
         { 
             m_previousSeconds = m_timeInSeconds;
             m_onSecondsChanged.Invoke(m_timeInSeconds);
+            m_ipv4 = StaticNtpOffsetFetcher.m_serverIpv4Used;
             m_onServerName.Invoke(StaticNtpOffsetFetcher.m_serverNameUsed);
             m_onServerIpv4.Invoke(StaticNtpOffsetFetcher.m_serverIpv4Used);
         }
