@@ -51,6 +51,7 @@ namespace Eloi.IID
                 var milliseconds = (intPart * 1000 + (fractPart * 1000) / 0x100000000L);
                 var networkDateTime = (new DateTime(1900, 1, 1)).AddMilliseconds((long)milliseconds);
                 var offset = (networkDateTime - DateTime.UtcNow).TotalMilliseconds;
+
                 return (int)offset;
             }
             catch (Exception e)

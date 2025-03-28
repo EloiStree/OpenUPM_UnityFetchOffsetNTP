@@ -1,7 +1,28 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
-public class NtpOffsetOnlyOnceMono : MonoBehaviour { 
+public static class StaticNtpOffsetOnlyOnce {
+    static  Action<long> sm_millisecondsOffsetChanged;
+    
+    public static void NotifyOffsetChanged(long millisecondsOffsetChanged) { sm_millisecondsOffsetChanged?.Invoke(millisecondsOffsetChanged); }
+    public static void AddListenerToOffsetChanged(Action<long> offsetChanged) { sm_millisecondsOffsetChanged += offsetChanged; }
+    public static void RemoveListenerToOffsetChanged(Action<long> offsetChanged) { sm_millisecondsOffsetChanged -= offsetChanged; }
+    static long sm_millisecondsOffset;
+    public static void SetNotifyIfChanged(long offsetInMilliseconds)
+    {
+        if (sm_millisecondsOffset != offsetInMilliseconds) { 
+        
+            long old = sm_millisecondsOffset;
+            sm_millisecondsOffset = offsetInMilliseconds;
+
+            NotifyOffsetChanged(sm_millisecondsOffset);
+
+        }    }
+}
+public class NtpOffsetOnlyOnceMono : MonoBehaviour {
+
+   
 
     public string [] m_serversNtp  =new string[]{
         "raspberrypi.local",

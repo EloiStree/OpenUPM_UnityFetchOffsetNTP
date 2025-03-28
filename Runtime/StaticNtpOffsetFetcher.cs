@@ -11,6 +11,7 @@ public class StaticNtpOffsetFetcher {
 
     public static long GetOffsetInMilliseconds()
     {
+
         return m_offsetInMilliseconds;
     }
     public static void UpdateOffsetFromCustomCode(int offsetInMilliseconds)
@@ -109,5 +110,6 @@ public class StaticNtpOffsetFetcher {
     public static void LoadOffsetWithPlayerPrefs() {
         string text = PlayerPrefs.GetString("NtpOffsetInMilliseconds", "0");
         long.TryParse(text, out m_offsetInMilliseconds);
+        StaticNtpOffsetOnlyOnce.SetNotifyIfChanged(m_offsetInMilliseconds);
     }
 }
