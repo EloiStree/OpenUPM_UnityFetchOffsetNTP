@@ -6,8 +6,9 @@ public class StaticNtpOffsetFetcher {
 
     public static bool m_wasLoadedOnceFromServer = false;
     public static long m_offsetInMilliseconds = 0;
-    public static string m_serverNameUsed="";
-    public static string m_serverIpv4Used="";
+
+    public static string m_serverNameUsed = "";
+    public static string m_serverIpv4Used = "";
 
     public static long GetOffsetInMilliseconds()
     {
@@ -58,7 +59,7 @@ public class StaticNtpOffsetFetcher {
         return false;
     }
 
-    public static bool UpdateOffsetFromServer(string ntpServer, bool loadOnlyIfNotLoadYet = true)
+    public static bool UpdateOffsetFromServer(string ntpServerIvp4, bool loadOnlyIfNotLoadYet = true)
     {
         if (loadOnlyIfNotLoadYet && m_wasLoadedOnceFromServer) {
 
@@ -68,9 +69,7 @@ public class StaticNtpOffsetFetcher {
         try
         {
 
-            string ipv4 = NtpOffsetFetcher.GetIpv4FromHostname(ntpServer);
-           // Debug.Log($"Try to fetch {ntpServer} --> {ipv4} ");
-            int offset = NtpOffsetFetcher.FetchNtpOffsetInMilliseconds(ipv4, out bool hadError);
+            int offset = NtpOffsetFetcher.FetchNtpOffsetInMilliseconds(ntpServerIvp4, out bool hadError);
             if (hadError)
                 return false;
 
@@ -78,19 +77,19 @@ public class StaticNtpOffsetFetcher {
 
             UpdateOffsetFromCustomCode(offset);
             m_wasLoadedOnceFromServer = true;
-            m_serverNameUsed = ntpServer;
-            m_serverIpv4Used = ipv4;
+            m_serverNameUsed = ntpServerIvp4;
+            m_serverIpv4Used = ntpServerIvp4;
             return true;
         }
         catch (System.NullReferenceException e)
         {
-            Debug.LogError($"Server is null ?: {ntpServer} {e}");
+            Debug.LogError($"Server is null ?: {ntpServerIvp4} {e}");
 
           
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"Error NTP Fetch: {ntpServer} {e}");
+            Debug.LogError($"Error NTP Fetch: {ntpServerIvp4} {e}");
             
         }
         return false;

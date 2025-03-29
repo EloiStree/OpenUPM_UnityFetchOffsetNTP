@@ -5,6 +5,9 @@ using System;
 
 public class NtpOffsetFetcherMono : MonoBehaviour
 {
+    [TextArea(2, 5)]
+    public string m_developerNote = @"mDNS like '.local' of the Raspberry Pi can lead to have side bug on some platform. Please provide IPV4. If you use LAN NTP Server";
+
     public string m_ntpServer = "be.pool.ntp.org";
     public int m_ntpOffsetLocalToServerInMilliseconds = 0;
     public UnityEvent<int> m_onNtpOffsetRefreshInMilliseconds;

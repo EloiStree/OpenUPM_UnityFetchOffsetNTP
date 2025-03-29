@@ -5,6 +5,8 @@ using System.Net.Sockets;
 using System.Net;
 using System.Linq;
 using System.Diagnostics;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace Eloi.IID
 {
@@ -14,19 +16,47 @@ namespace Eloi.IID
         private static int sm_defaultGlobalNtpOffsetInMilliseconds = 0;
         private static int sm_connectServerTimeoutMilliseconds = 800;
 
-        public static int FetchNtpOffsetInMilliseconds(string ntpServer, out bool hadError)
+        public static int FetchNtpOffsetInMilliseconds(string ntpServerIpv4, out bool hadError, int ntpPort=123)
         {
+            bool isLocalRaspberryPi = ntpServerIpv4.Contains(".local");
+            bool isAndroid= UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android;
+            if (isLocalRaspberryPi && isAndroid)
+            {
+                UnityEngine.Debug.LogWarning("Raspberry PI .local is mDNS that is not supported on Quest and some devices (" + ntpServerIpv4 + "). You can use https://github.com/EloiStree/2025_03_26_ScanForRaspberryPi if youp want to do LAN Raspberryi PI");
+            }
+
+
+
+            string [] split = ntpServerIpv4.Split(new char[] { '.',':'});
+            bool isIpv4 = split.Length>=4 
+                && int.TryParse(split[0], out int _)
+                && int.TryParse(split[1], out int _)
+                && int.TryParse(split[2], out int _)
+                && int.TryParse(split[3], out int _);
+            bool hasItOwnPort = isIpv4 &&  split.Length == 5
+                && int.TryParse(split[4], out ntpPort);
+
+            if (hasItOwnPort)
+                ntpServerIpv4 = $"{split[0]}.{split[1]}.{split[2]}.{split[3]}";
+
             hadError = false;
             try
             {
                 var ntpData = new byte[48];
                 ntpData[0] = 0x1B;
-                var addresses = System.Net.Dns.GetHostEntry(ntpServer).AddressList;
 
-                UnityEngine.Debug.Log($"NTP Fetch: {ntpServer} {string.Join(",", addresses.Select(a => a.ToString()))}");
-
-
-                var ipEndPoint = new System.Net.IPEndPoint(addresses[0], 123);
+                IPAddress[] addresses = null; 
+                if(!isIpv4)
+                {
+                    addresses = System.Net.Dns.GetHostEntry(ntpServerIpv4).AddressList;
+                    UnityEngine.Debug.Log($"NTP Fetch: {ntpServerIpv4} {string.Join(",", addresses.Select(a => a.ToString()))}");
+                }
+                else
+                {
+                    addresses = new IPAddress[] { IPAddress.Parse(ntpServerIpv4) };
+                    UnityEngine.Debug.Log($"NTP Fetch IPV4: {ntpServerIpv4} {string.Join(",", addresses.Select(a => a.ToString()))}");
+                }
+                var ipEndPoint = new System.Net.IPEndPoint(addresses[0], ntpPort);
                 using (var socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp))
                 {
                     socket.Connect(ipEndPoint);
@@ -56,7 +86,7 @@ namespace Eloi.IID
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.Log ($"Error NTP Fetch: {ntpServer} {e}");
+                UnityEngine.Debug.Log ($"Error NTP Fetch: {ntpServerIpv4} {e}");
                 hadError = true;
                 return 0;
             }
@@ -104,6 +134,31 @@ namespace Eloi.IID
                 out ntpTimeInMillisecondsUTC);
 
         }
+        public static string GetIpv4FromHostname(string hostname)
+        {
+            try
+            {
+                // Get the IP addresses associated with the hostname
+                IPAddress[] addresses = Dns.GetHostAddresses(hostname);
+
+                foreach (IPAddress address in addresses)
+                {
+                    // Check if the address is IPv4
+                    if (address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return address.ToString();
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                UnityEngine.Debug.LogWarning("Error resolving IP address in NtpOffsetFetcher NTP: " + ex.Message + "\n" + ex.StackTrace);
+            }
+
+            return "";
+        }
+
 
         public static DateTime GetDateTimeFromTimestampMillisecondsUTC(long timestampMilliseconds)
         {
@@ -135,30 +190,30 @@ namespace Eloi.IID
                 GetDateTimeFromTimestampMillisecondsUTC(ntpTimeInMillisecondsUTC).ToString(dateFormat);
         }
 
-        public static string GetIpv4FromHostname(string hostname)
-        {
-            try
-            {
-                // Get the IP addresses associated with the hostname
-                IPAddress[] addresses = Dns.GetHostAddresses(hostname);
+        //public static string GetIpv4FromHostname(string hostname)
+        //{
+        //    try
+        //    {
+        //        // Get the IP addresses associated with the hostname
+        //        IPAddress[] addresses = Dns.GetHostAddresses(hostname);
 
-                foreach (IPAddress address in addresses)
-                {
-                    // Check if the address is IPv4
-                    if (address.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        return address.ToString();
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
+        //        foreach (IPAddress address in addresses)
+        //        {
+        //            // Check if the address is IPv4
+        //            if (address.AddressFamily == AddressFamily.InterNetwork)
+        //            {
+        //                return address.ToString();
+        //            }
+        //        }
+        //    }
+        //    catch (System.Exception ex)
+        //    {
                 
-                UnityEngine.Debug.LogWarning("Error resolving IP address: " + ex.Message + "\n"+ex.StackTrace);
-            }
+        //        UnityEngine.Debug.LogWarning("Error resolving IP address: " + ex.Message + "\n"+ex.StackTrace);
+        //    }
 
-            return null; 
-        }
+        //    return null; 
+        //}
 
 
         private static void GetCurrentTimeAsMillisecondsLocalNoneUtc(out long localTimeNoneUTCInMilliseconds)
