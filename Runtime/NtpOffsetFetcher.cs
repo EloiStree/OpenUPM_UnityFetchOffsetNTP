@@ -26,7 +26,7 @@ namespace Eloi.IID
             }
 
 
-
+             
             string [] split = ntpServerIpv4.Split(new char[] { '.',':'});
             bool isIpv4 = split.Length>=4 
                 && int.TryParse(split[0], out int _)
